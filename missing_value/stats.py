@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
+from feature_engine.imputation import MeanMedianImputer
+from feature_engine.imputation import CategoricalImputer
 
 
 #define dataframe
@@ -27,3 +29,22 @@ house_price['LotFrontage'] = imputer.fit_transform(house_price['LotFrontage'].va
 #fill nan values with mode value - sklearn
 imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
 house_price['GarageYrBlt'] = imputer.fit_transform(house_price['GarageYrBlt'].values.reshape(len(house_price['GarageYrBlt'].values), 1))
+
+
+#fill nan values with mean value - feature_engine
+imputer = MeanMedianImputer(imputation_method='mean',
+                            variables=['LotFrontage', 'MasVnrArea'])
+imputer.fit(house_price)
+imputer.variables_
+imputer.imputer_dict_
+house_price = imputer.transform(house_price)
+
+#fill nan values with median value - feature_engine
+imputer = MeanMedianImputer(imputation_method='median',
+                            variables=['LotFrontage', 'MasVnrArea'])
+house_price = imputer.fit_transform(house_price)
+
+#fill nan values with mode value - feature_engine
+imputer = CategoricalImputer(imputation_method='frequent',
+                             variables=['BsmtQual'])
+house_price = imputer.fit_transform(house_price)
