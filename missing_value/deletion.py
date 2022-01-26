@@ -1,4 +1,5 @@
 import pandas as pd
+from feature_engine.imputation import DropMissingData
 
 #define dataframe
 house_price = pd.read_csv('../sample_datasets/house_price.csv')
@@ -34,3 +35,11 @@ house_price.drop(columns=['PoolQC'], inplace=True)
 #delete specific row
 house_price = house_price.drop(index=[0, 1])
 house_price.drop(index=[0, 1], inplace=True)
+
+#delete by rows only selected columns - feature_engine
+imputer = DropMissingData(variables=['LotFrontage', 'MasVnrArea'])
+house_price = imputer.fit_transform(house_price)
+
+#delete by row's thresh percentage non-NA count - feature_engine
+imputer = DropMissingData(variables=['LotFrontage', 'MasVnrArea'], threshold=0.5)
+house_price = imputer.fit_transform(house_price)
